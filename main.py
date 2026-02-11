@@ -3,29 +3,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-# ===============================
-# CONSTANTS
-# ===============================
+
 CPSI = 750
 k_factor = 5.5
 O2_PER_G_CEO2 = 0.11
 
-# Nominal values
 washcoat_nom = 160        # g/L
-ceo2_nom = 0.275          # wt fraction
+ceo2_nom = 0.275          # weight fraction
 eta_nom = 0.70
 
-# ===============================
-# AXES RANGES
-# ===============================
+#range of each parameter in osc calculation
 volume = np.linspace(0.86, 1.0, 60)
 washcoat = np.linspace(120, 200, 60)
 ceo2_frac = np.linspace(0.20, 0.35, 60)
 eta = np.linspace(0.65, 0.75, 60)
 
-# ===============================
-# OSC FUNCTION
-# ===============================
+#osc calculation
 def compute_osc(volume, washcoat, ceo2_frac, eta):
     washcoat_mass = volume * washcoat
     ceo2_mass = washcoat_mass * ceo2_frac
@@ -33,9 +26,7 @@ def compute_osc(volume, washcoat, ceo2_frac, eta):
     osc_geom = CPSI * k_factor * volume
     return osc_geom * stored_o2
 
-# ===============================
-# 1. Volume vs Washcoat Loading
-# ===============================
+# graph plot 1 (Volume vs Washcoat Loading)
 V1, W = np.meshgrid(volume, washcoat)
 OSC_vw = compute_osc(V1, W, ceo2_nom, eta_nom)
 
@@ -47,9 +38,7 @@ plt.ylabel("Washcoat Loading (g/L)")
 plt.title("OSC Contour: Volume vs Washcoat Loading")
 plt.show()
 
-# ===============================
-# 2. Volume vs CeO2 wt fraction
-# ===============================
+#Volume vs Cirica weight rfaction
 V2, C = np.meshgrid(volume, ceo2_frac)
 OSC_vc = compute_osc(V2, washcoat_nom, C, eta_nom)
 
@@ -61,9 +50,7 @@ plt.ylabel("CeO₂ Weight Fraction")
 plt.title("OSC Contour: Volume vs CeO₂ Fraction")
 plt.show()
 
-# ===============================
-# 3. Volume vs Utilisation Efficiency
-# ===============================
+#Volume vs/ Utilisation efficiency
 V3, E = np.meshgrid(volume, eta)
 OSC_ve = compute_osc(V3, washcoat_nom, ceo2_nom, E)
 
@@ -75,9 +62,7 @@ plt.ylabel("Utilisation Efficiency (η)")
 plt.title("OSC Contour: Volume vs Utilisation Efficiency")
 plt.show()
 
-# ===============================
-# 4. FILLED OSC CONTOUR
-# ===============================
+#contour plot
 plt.figure()
 plt.contourf(V1, W, OSC_vw)
 plt.colorbar(label="OSC")
@@ -86,9 +71,7 @@ plt.ylabel("Washcoat Loading (g/L)")
 plt.title("Filled OSC Contour: Volume vs Washcoat")
 plt.show()
 
-# ===============================
-# 5. 3D SURFACE PLOT
-# ===============================
+#3d Volume vs washcoat loading vs osc
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
 ax.plot_surface(V1, W, OSC_vw)
@@ -98,9 +81,7 @@ ax.set_zlabel("OSC")
 ax.set_title("3D Surface Plot: OSC")
 plt.show()
 
-# ===============================
-# 6. LOOKUP TABLE (LUT)
-# ===============================
+#lookup table
 volume_lut = np.linspace(0.86, 1.0, 10)
 washcoat_lut = np.linspace(120, 200, 10)
 ceo2_lut = np.linspace(0.20, 0.35, 10)
